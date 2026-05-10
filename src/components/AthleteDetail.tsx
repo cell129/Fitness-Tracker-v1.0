@@ -9,7 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ArrowLeft, UserSquare, Calendar, ChevronRight, Trash2, Plus, Ruler, Dumbbell, Activity, Download, HelpCircle, Camera, Upload } from 'lucide-react';
 import { format } from 'date-fns';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Legend } from 'recharts';
+import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Legend } from 'recharts';
 import { toast } from 'sonner';
 import CoachingTips from './CoachingTips';
 
@@ -362,18 +362,71 @@ export default function AthleteDetail({
                   <div className="h-[300px] w-full">
                     {chartData.length > 1 ? (
                       <ResponsiveContainer width="100%" height="100%">
-                        <LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                          <XAxis dataKey="dateStr" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 'bold' }} dy={10} />
-                          <YAxis yAxisId="left" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 'bold' }} dx={-10} domain={['auto', 'auto']} />
-                          <YAxis yAxisId="right" orientation="right" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: 'bold' }} dx={10} domain={['auto', 'auto']} />
-                          <RechartsTooltip 
-                            contentStyle={{ borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                        <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
+                          <defs>
+                            <linearGradient id="colorWeight" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.1}/>
+                              <stop offset="95%" stopColor="#4f46e5" stopOpacity={0}/>
+                            </linearGradient>
+                            <linearGradient id="colorHeight" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#10b981" stopOpacity={0.1}/>
+                              <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                            </linearGradient>
+                          </defs>
+                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                          <XAxis 
+                            dataKey="dateStr" 
+                            axisLine={false} 
+                            tickLine={false} 
+                            tick={{ fontSize: 10, fill: '#94a3b8', fontWeight: '500' }} 
+                            dy={10} 
                           />
-                          <Legend wrapperStyle={{ paddingTop: '20px', fontSize: '12px', fontWeight: 'bold', color: '#64748b' }} />
-                          <Line yAxisId="left" type="monotone" name="Weight (kg)" dataKey="weight" stroke="#4f46e5" strokeWidth={3} dot={{ r: 4, fill: '#4f46e5', strokeWidth: 2 }} activeDot={{ r: 6 }} />
-                          <Line yAxisId="right" type="monotone" name="Height (cm)" dataKey="height" stroke="#10b981" strokeWidth={3} dot={{ r: 4, fill: '#10b981', strokeWidth: 2 }} />
-                        </LineChart>
+                          <YAxis 
+                            yAxisId="left" 
+                            hide 
+                            domain={['auto', 'auto']} 
+                          />
+                          <YAxis 
+                            yAxisId="right" 
+                            hide 
+                            domain={['auto', 'auto']} 
+                          />
+                          <RechartsTooltip 
+                            cursor={{ stroke: '#e2e8f0', strokeWidth: 1 }}
+                            contentStyle={{ 
+                              borderRadius: '12px', 
+                              border: 'none', 
+                              boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
+                              padding: '12px'
+                            }}
+                            itemStyle={{ fontSize: '12px', fontWeight: 'bold' }}
+                            labelStyle={{ fontSize: '10px', color: '#94a3b8', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}
+                          />
+                          <Area 
+                            yAxisId="left" 
+                            type="monotone" 
+                            name="Weight (kg)" 
+                            dataKey="weight" 
+                            stroke="#4f46e5" 
+                            strokeWidth={3} 
+                            fillOpacity={1} 
+                            fill="url(#colorWeight)" 
+                            dot={{ r: 4, fill: '#fff', stroke: '#4f46e5', strokeWidth: 2 }} 
+                            activeDot={{ r: 6, strokeWidth: 0, fill: '#4f46e5' }} 
+                          />
+                          <Area 
+                            yAxisId="right" 
+                            type="monotone" 
+                            name="Height (cm)" 
+                            dataKey="height" 
+                            stroke="#10b981" 
+                            strokeWidth={3} 
+                            fillOpacity={1} 
+                            fill="url(#colorHeight)" 
+                            dot={{ r: 4, fill: '#fff', stroke: '#10b981', strokeWidth: 2 }} 
+                            activeDot={{ r: 6, strokeWidth: 0, fill: '#10b981' }} 
+                          />
+                        </AreaChart>
                       </ResponsiveContainer>
                     ) : (
                       <div className="h-full flex items-center justify-center flex-col text-slate-400">
