@@ -1,0 +1,6 @@
+{
+  "name": "Fitness Tracker",
+  "description": "App to track athlete physical attributes like arm length, weight, height, etc.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
